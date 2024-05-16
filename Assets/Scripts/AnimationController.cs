@@ -17,6 +17,8 @@ namespace AnimationSpace
         private void Update()
         {
             _animatorPlayer.SetBool("isMove",  _player.IsMoving);
+            _animatorPlayer.SetBool("isGrounded",  _player.IsGrounded);
+            _animatorPlayer.SetFloat("velocityY",  _player.GetVelocityY());
         }
     }
 

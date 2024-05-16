@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+// зачем sorting layers в tilemap?
+
 namespace PlayerSpace
 {
     public class Player : MonoBehaviour
@@ -15,12 +17,12 @@ namespace PlayerSpace
         [SerializeField] private LayerMask _groundLayerMask;
 
         private bool _isLookToRight;
-        private bool _isGrounded;
         private bool _canDoubleJump;
         
         private Rigidbody2D _rigidBody;
 
         internal bool IsMoving { get; private set; }
+        internal bool IsGrounded { get; private set; }
 
         private void Start()
         {
@@ -46,10 +48,10 @@ namespace PlayerSpace
 
         internal void Jump()
         {
-            if (_isGrounded || _canDoubleJump)
+            if (IsGrounded || _canDoubleJump)
             {
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
-                _canDoubleJump = _isGrounded;  
+                _canDoubleJump = IsGrounded;  
             }
         }
 
@@ -64,7 +66,12 @@ namespace PlayerSpace
 
         private void CollisionCheck()
         {
-            _isGrounded = Physics2D.OverlapCircle(_groundCheckTransform.position, _groundCheckRadius, _groundLayerMask);
+            IsGrounded = Physics2D.OverlapCircle(_groundCheckTransform.position, _groundCheckRadius, _groundLayerMask);
+        }
+
+        public float GetVelocityY()
+        {
+            return _rigidBody.velocity.y;
         }
 
         // Use for setting
@@ -72,16 +79,11 @@ namespace PlayerSpace
         // {
         //     Gizmos.DrawWireSphere(_groundCheckTransform.position, _groundCheckRadius);
         // }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            Debug.Log(111);
-        }
-
-        private void OnCollisionEnter(Collision other)
-        {
-            Debug.Log(222);
-        }
+        
+        // private void OnCollisionEnter2D(Collision2D other)
+        // {
+        //     Debug.Log(222);
+        // }
     }
 }
 
