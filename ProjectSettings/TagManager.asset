@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Alive
+  - Fruit
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
@@ -11,8 +14,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Fruits
   - 
   - 
   - 
@@ -40,4 +43,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2309717365
+    locked: 0
+  - name: Level
+    uniqueID: 3696284113
+    locked: 0
+  - name: Ground
+    uniqueID: 2077666635
+    locked: 0
+  - name: Player
+    uniqueID: 3712097049
+    locked: 0
+  - name: Fruits
+    uniqueID: 1556833229
     locked: 0

@@ -1,15 +1,12 @@
-using System;
 using UnityEngine;
-
-// зачем sorting layers в tilemap?
 
 namespace PlayerSpace
 {
     public class Player : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] private float _speed = 1f;
-        [SerializeField] private float _jumpForce = 5f;
+        [SerializeField] private float _speed = 10f;
+        [SerializeField] private float _jumpForce = 15f;
 
         [Header("Collision Info")] 
         [SerializeField] private Transform _groundCheckTransform;
@@ -23,12 +20,18 @@ namespace PlayerSpace
 
         internal bool IsMoving { get; private set; }
         internal bool IsGrounded { get; private set; }
+        public bool IsDead { get; set; }
+        
+        public delegate void OnPlayerCollision(Collision2D other);
+        public static event OnPlayerCollision OnPlayerCollisionEvent;
 
         private void Start()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
             
             IsMoving = false;
+            IsGrounded = false;
+            IsDead = false;
             _isLookToRight = true;
             _canDoubleJump = false;
         }
@@ -43,12 +46,17 @@ namespace PlayerSpace
 
         internal void Move(float moveValue)
         {
+            if (IsDead)
+            {
+                return;
+            }
+            
             _rigidBody.velocity = new Vector2(moveValue * _speed, _rigidBody.velocity.y);
         }
 
         internal void Jump()
         {
-            if (IsGrounded || _canDoubleJump)
+            if (!IsDead && (IsGrounded || _canDoubleJump))
             {
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
                 _canDoubleJump = IsGrounded;  
@@ -74,15 +82,20 @@ namespace PlayerSpace
             return _rigidBody.velocity.y;
         }
 
+        public void Restore()
+        {
+            IsDead = false;
+        }
+        
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            OnPlayerCollisionEvent?.Invoke(other);
+        }
+
         // Use for setting
         // private void OnDrawGizmos()
         // {
         //     Gizmos.DrawWireSphere(_groundCheckTransform.position, _groundCheckRadius);
-        // }
-        
-        // private void OnCollisionEnter2D(Collision2D other)
-        // {
-        //     Debug.Log(222);
         // }
     }
 }
