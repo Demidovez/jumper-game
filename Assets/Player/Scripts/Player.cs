@@ -12,15 +12,15 @@ namespace PlayerSpace
         [SerializeField] private Transform _groundCheckTransform;
         [SerializeField] private float _groundCheckRadius;
         [SerializeField] private LayerMask _groundLayerMask;
-
-        private bool _isLookToRight;
+        
+        private bool _isLookToRight = true;
         private bool _canDoubleJump;
         
         private Rigidbody2D _rigidBody;
 
         internal bool IsMoving { get; private set; }
         internal bool IsGrounded { get; private set; }
-        public bool IsDead { get; set; }
+        internal bool IsDead { get; set; }
         
         public delegate void OnPlayerCollision(Collision2D other);
         public static event OnPlayerCollision OnPlayerCollisionEvent;
@@ -28,12 +28,6 @@ namespace PlayerSpace
         private void Start()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
-            
-            IsMoving = false;
-            IsGrounded = false;
-            IsDead = false;
-            _isLookToRight = true;
-            _canDoubleJump = false;
         }
 
         private void Update()
