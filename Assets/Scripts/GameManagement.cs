@@ -1,7 +1,9 @@
 using EnemySpace;
 using PlayerSpace;
 using TMPro;
+using UISpace;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 namespace GameManagementSpace
@@ -23,19 +25,24 @@ namespace GameManagementSpace
 
         [Header("UI")] 
         [SerializeField] private Canvas _popupsContainer;
-        [SerializeField] private GameObject _popupGameOver;
+        [SerializeField] private GameObject _popupGameOverPrefab;
+        [SerializeField] private GameObject _popupGameWinPrefab;
         
         [Header("Other")]
         [SerializeField] private GameObject _checkPoint;
         
         private int _allFruitsCollectedCount = 0;
         private int _allKilledEnemiesCount = 0;
+
+        private GameObject _popupGameOver;
+        private GameObject _popupGameWin;
         
         private void OnEnable()
         {
             Enemy.OnEnemyDieEvent += OnEnemyDie;
             Enemy.OnEnemyDamageEvent += OnEnemyDamage;
             Player.OnPlayerCollisionEvent += OnPlayerCollision;
+            GamePopup.OnGamePopupNewGameEvent += OnStartNewGame;
         }
 
         private void Start()
@@ -43,12 +50,13 @@ namespace GameManagementSpace
             ResetStats();
         }
         
-        public void ClickNewGame()
+        private void OnStartNewGame()
         {
-            ReloadObjects();
-            ResetStats();
-            
-            _player.Restore();
+            Time.timeScale = 1f;
+            Destroy(_popupGameOver);
+            Destroy(_popupGameWin);
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         private void ResetStats()
@@ -89,7 +97,18 @@ namespace GameManagementSpace
             _textCountKilled.text = "";
 
             Time.timeScale = 0f;
-            Instantiate(_popupGameOver, Vector3.zero, Quaternion.identity, _popupsContainer.transform);
+            
+            _popupGameOver = Instantiate(_popupGameOverPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
+        }
+        
+        private void GameWin()
+        {
+            _textCountFruits.text = "";
+            _textCountKilled.text = "";
+
+            Time.timeScale = 0f;
+            
+            _popupGameOver = Instantiate(_popupGameWinPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
         }
 
         private void OnPlayerCollision(Collision2D other)
@@ -104,7 +123,7 @@ namespace GameManagementSpace
                 TryShowCheckpoint();
             } else if (other.gameObject.CompareTag("Checkpoint"))
             {
-                ReloadObjects();
+                GameWin();
             }
         }
 
@@ -113,23 +132,13 @@ namespace GameManagementSpace
             _textCountFruits.text = $"Собрано фруктов: {_allFruitsCollectedCount}";
             _textCountKilled.text = $"Убито врагов: {_allKilledEnemiesCount}";
         }
-
-        private void ReloadObjects()
-        {
-            _checkPoint.SetActive(false);
-            
-            _fruitApple.SetActive(true);
-            _fruitBanana.SetActive(true);
-            _fruitMelon.SetActive(true);
-
-            _enemy.Restore();
-        }
         
         private void OnDisable()
         {
             Enemy.OnEnemyDieEvent -= OnEnemyDie;
-            Enemy.OnEnemyDamageEvent += OnEnemyDamage;
+            Enemy.OnEnemyDamageEvent -= OnEnemyDamage;
             Player.OnPlayerCollisionEvent -= OnPlayerCollision;
+            GamePopup.OnGamePopupNewGameEvent -= OnStartNewGame;
         }
     }
 }

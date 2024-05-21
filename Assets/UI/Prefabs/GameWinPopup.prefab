@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 2225383901410832445}
   - component: {fileID: 3799104609743200490}
   m_Layer: 5
-  m_Name: GameOverText
+  m_Name: GameWinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over!
+  m_text: You Win!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -414,7 +414,7 @@ GameObject:
   - component: {fileID: 1094479788660511717}
   - component: {fileID: 2745677285533305643}
   m_Layer: 5
-  m_Name: GameOverPopup
+  m_Name: GameWinPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
