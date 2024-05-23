@@ -11,7 +11,7 @@ namespace CameraFollowSpace
         [SerializeField] private Transform _endLevelSideTransform; 
 
         private Vector3 _startPosition;
-        private float widthCamera;
+        private float _widthCamera;
         
         private void Start()
         {
@@ -20,7 +20,7 @@ namespace CameraFollowSpace
             Vector3 leftSidePosition = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
             Vector3 rightSidePosition = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0));
 
-            widthCamera = rightSidePosition.x - leftSidePosition.x;
+            _widthCamera = rightSidePosition.x - leftSidePosition.x;
         }
 
         private void LateUpdate()
@@ -29,9 +29,9 @@ namespace CameraFollowSpace
             Vector3 desirePosition = new Vector3(_targetTransform.position.x, _startPosition.y, _startPosition.z) + _offset;
             Vector3 smoothPosition = Vector3.Lerp(_startPosition, desirePosition, _smoothSpeed);
 
-            if (smoothPosition.x + (widthCamera / 2) > _endLevelSideTransform.position.x)
+            if (smoothPosition.x + (_widthCamera / 2) > _endLevelSideTransform.position.x)
             {
-                smoothPosition = new Vector3(_endLevelSideTransform.position.x - (widthCamera / 2), _startPosition.y, _startPosition.z);
+                smoothPosition = new Vector3(_endLevelSideTransform.position.x - (_widthCamera / 2), _startPosition.y, _startPosition.z);
             } else if (smoothPosition.x < 0)
             {
                 smoothPosition = _startPosition;

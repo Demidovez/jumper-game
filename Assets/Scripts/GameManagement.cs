@@ -11,7 +11,6 @@ namespace GameManagementSpace
     public class GameManagement : MonoBehaviour
     {
         [Header("Characters")]
-        [SerializeField] private Player _player;
         [SerializeField] private Enemy _enemy;
 
         [Header("Fruits")]
@@ -86,7 +85,7 @@ namespace GameManagementSpace
         private void OnEnemyDamage()
         {
             _enemy.IsKilledSomeone = true;
-            _player.IsDead = true;
+            Player.Instance.IsDead = true;
 
             GameOver();
         }

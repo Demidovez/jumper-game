@@ -16,7 +16,7 @@ TagManager:
   - UI
   - Player
   - Fruits
-  - 
+  - Weapon
   - 
   - 
   - 
@@ -55,6 +55,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3712097049
+    locked: 0
+  - name: Weapon
+    uniqueID: 3219813095
     locked: 0
   - name: Fruits
     uniqueID: 1556833229

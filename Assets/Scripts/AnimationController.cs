@@ -6,7 +6,6 @@ namespace AnimationSpace
 {
     public class AnimationController : MonoBehaviour
     {
-        [SerializeField] private Player _player;
         [SerializeField] private Enemy _enemy;
         
         private Animator _animatorPlayer;
@@ -14,16 +13,16 @@ namespace AnimationSpace
 
         private void Start()
         {
-            _animatorPlayer = _player.GetComponent<Animator>();
+            _animatorPlayer = Player.Instance.GetComponent<Animator>();
             _animatorEnemy = _enemy.GetComponent<Animator>();
         }
 
         private void Update()
         {
-            _animatorPlayer.SetBool("isMove",  _player.IsMoving);
-            _animatorPlayer.SetBool("isGrounded",  _player.IsGrounded);
-            _animatorPlayer.SetFloat("velocityY",  _player.GetVelocityY());
-            _animatorPlayer.SetBool("isDead",  _player.IsDead);
+            _animatorPlayer.SetBool("isMove",  Player.Instance.IsMoving);
+            _animatorPlayer.SetBool("isGrounded",  Player.Instance.IsGrounded);
+            _animatorPlayer.SetFloat("velocityY",  Player.Instance.GetVelocityY());
+            _animatorPlayer.SetBool("isDead",  Player.Instance.IsDead);
             
             _animatorEnemy.SetBool("isKilledSomeone",  _enemy.IsKilledSomeone);
         }

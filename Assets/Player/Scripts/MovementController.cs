@@ -4,13 +4,7 @@ namespace PlayerSpace
 {
     public class MovementController : MonoBehaviour
     {
-        private Player _player;
         private float _moveInput;
-
-        private void Start()
-        {
-            _player = GetComponent<Player>();
-        }
 
         private void Update()
         {
@@ -18,13 +12,13 @@ namespace PlayerSpace
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _player.Jump();
+                Player.Instance.Jump();
             }
         }
 
         private void FixedUpdate()
         {
-            _player.Move(_moveInput);
+            Player.Instance.Move(_moveInput);
         }
     }
 }
