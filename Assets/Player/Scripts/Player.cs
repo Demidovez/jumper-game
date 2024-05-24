@@ -17,6 +17,7 @@ namespace PlayerSpace
         
         [Header("Weapon")] 
         [SerializeField] private GameObject _weaponPrefab;
+        [SerializeField] private Vector3 _weaponPositionOffset = new Vector3(0.5f, -0.5f, 0);
         
         private GameObject _weaponGameObject;
         private Weapon _weapon;
@@ -57,7 +58,7 @@ namespace PlayerSpace
 
         private void SetWeapon()
         {
-            _weaponGameObject = Instantiate(_weaponPrefab, transform.position, Quaternion.identity, transform);
+            _weaponGameObject = Instantiate(_weaponPrefab, transform.position + _weaponPositionOffset, Quaternion.identity, transform);
             _weapon = _weaponGameObject.GetComponent<Weapon>();
         }
 
@@ -85,11 +86,6 @@ namespace PlayerSpace
             _weapon.IsFiring = canFire;
         }
 
-        public void SetDamageDirection(Vector3 targetPosition)
-        {
-            _weapon.SetDirection(targetPosition);
-        }
-
         private void SetLookDirection()
         {
             if (IsMoving && (_isLookToRight != _rigidBody.velocity.x > 0))
@@ -109,10 +105,10 @@ namespace PlayerSpace
             return _rigidBody.velocity.y;
         }
 
-        public void Restore()
-        {
-            IsDead = false;
-        }
+        // public void Restore()
+        // {
+        //     IsDead = false;
+        // }
         
         private void OnCollisionEnter2D(Collision2D other)
         {

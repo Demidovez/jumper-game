@@ -14,8 +14,6 @@ namespace PlayerSpace
             {
                 Player.Instance.Damage(false);
             }
-
-            Player.Instance.SetDamageDirection(Input.mousePosition);
         }
     }
 }

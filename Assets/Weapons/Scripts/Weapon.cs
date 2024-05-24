@@ -8,11 +8,6 @@ namespace WeaponSpace
     {
         internal bool IsFiring { get; set; }
 
-        public void SetDirection(Vector3 targetPosition)
-        {
-            transform.rotation = Quaternion.FromToRotation(transform.position, targetPosition);
-        }
-
         public abstract string GetName();
     }
 }

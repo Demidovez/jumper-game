@@ -45,8 +45,7 @@ namespace WeaponSpace
             if (bullet)
             {
                 bullet.transform.position = transform.position;
-                // bullet.transform.rotation = Quaternion.LookRotation(transform.position);
-                // transform.RotateAround(transform.position, Vector3.up, 20 * Time.deltaTime);
+                bullet.transform.rotation = transform.rotation;
                 bullet.SetActive(true);
             }
         }

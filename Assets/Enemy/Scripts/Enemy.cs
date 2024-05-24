@@ -4,7 +4,6 @@ namespace EnemySpace
 {
     public class Enemy: MonoBehaviour
     {
-        [SerializeField] private Vector3 _startPosition = new Vector3(8.82f, -3.042f, 0f);
         [SerializeField] private float _speed = 5f;
         [SerializeField] private float _moveValue = -1f;
         
@@ -23,6 +22,7 @@ namespace EnemySpace
         public static event OnEnemyDamage OnEnemyDamageEvent;
         
         private Rigidbody2D _rigidBody;
+        private Vector3 _startPosition;
         
         public bool IsDead { get; private set; }
         public bool IsKilledSomeone { get; set; }
@@ -33,7 +33,7 @@ namespace EnemySpace
             
             IsDead = false;
             IsKilledSomeone = false;
-            transform.position = _startPosition;
+            _startPosition = transform.position;
         }
 
         private void Update()
@@ -60,7 +60,7 @@ namespace EnemySpace
         
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.CompareTag("Alive"))
+            if (other.gameObject.CompareTag("Player"))
             {
                 if (other.collider.IsTouching(_deathCollider))
                 {

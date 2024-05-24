@@ -1,3 +1,4 @@
+using BulletSpace;
 using EnemySpace;
 using PlayerSpace;
 using UnityEngine;
@@ -10,6 +11,11 @@ namespace AnimationSpace
         
         private Animator _animatorPlayer;
         private Animator _animatorEnemy;
+        
+        private void OnEnable()
+        {
+            Bullet.OnBulletDestroyEvent += OnBulletDestroy;
+        }
 
         private void Start()
         {
@@ -25,6 +31,18 @@ namespace AnimationSpace
             _animatorPlayer.SetBool("isDead",  Player.Instance.IsDead);
             
             _animatorEnemy.SetBool("isKilledSomeone",  _enemy.IsKilledSomeone);
+        }
+
+        private void OnBulletDestroy(GameObject obj)
+        {
+            Animator animator = obj.GetComponent<Animator>();
+                
+            animator.SetBool("IsDestroyed",  true);
+        }
+        
+        private void OnDisable()
+        {
+            Bullet.OnBulletDestroyEvent -= OnBulletDestroy;
         }
     }
 

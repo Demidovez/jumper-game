@@ -7,6 +7,8 @@ TagManager:
   - Alive
   - Fruit
   - Checkpoint
+  - Destructible
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -17,12 +19,12 @@ TagManager:
   - Player
   - Fruits
   - Weapon
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Boxes
+  - Saw
+  - Background
+  - Enemy
+  - FireTrap
+  - LevelFront
   - 
   - 
   - 
@@ -47,6 +49,9 @@ TagManager:
   - name: Background
     uniqueID: 2309717365
     locked: 0
+  - name: Saw
+    uniqueID: 2224891791
+    locked: 0
   - name: Level
     uniqueID: 3696284113
     locked: 0
@@ -64,4 +69,16 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 2054288297
+    locked: 0
+  - name: Boxes
+    uniqueID: 3925769361
+    locked: 0
+  - name: Enemy
+    uniqueID: 3864133851
+    locked: 0
+  - name: FireTrap
+    uniqueID: 2026830869
+    locked: 0
+  - name: LevelFront
+    uniqueID: 1281023171
     locked: 0
