@@ -12,11 +12,6 @@ namespace GameManagementSpace
     {
         [Header("Characters")]
         [SerializeField] private Enemy _enemy;
-
-        [Header("Fruits")]
-        [SerializeField] private GameObject _fruitApple;
-        [SerializeField] private GameObject _fruitBanana;
-        [SerializeField] private GameObject _fruitMelon;
         
         [Header("Stats")]
         [SerializeField] private TMP_Text _textCountFruits;
@@ -66,20 +61,11 @@ namespace GameManagementSpace
             _allFruitsCollectedCount = 0;
             _allKilledEnemiesCount = 0;
         }
-
-        private void TryShowCheckpoint()
-        {
-            if (_enemy.IsDead && !_fruitApple.activeSelf && !_fruitBanana.activeSelf && !_fruitMelon.activeSelf)
-            {
-                _checkPoint.SetActive(true);
-            }
-        }
         
         private void OnEnemyDie()
         {
             _allKilledEnemiesCount += 1;
             UpdateStats();
-            TryShowCheckpoint();
         }
         
         private void OnEnemyDamage()
@@ -119,7 +105,6 @@ namespace GameManagementSpace
                 _allFruitsCollectedCount += 1;
 
                 UpdateStats();
-                TryShowCheckpoint();
             } else if (other.gameObject.CompareTag("Checkpoint"))
             {
                 GameWin();
