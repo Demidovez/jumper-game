@@ -1,7 +1,10 @@
 using TagInterfacesSpace;
 using UnityEngine;
 
-public class Fire : MonoBehaviour, ITrap
+namespace TrapSpace
 {
-    
+    public class Fire : MonoBehaviour, ITrap
+    {
+
+    }
 }

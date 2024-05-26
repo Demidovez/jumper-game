@@ -35,7 +35,6 @@ namespace GameManagementSpace
         private void OnEnable()
         {
             Enemy.OnEnemyDieEvent += OnEnemyDie;
-            Enemy.OnEnemyDamageEvent += OnEnemyDamage;
             Player.OnPlayerCollisionEvent += OnPlayerCollision;
             GamePopup.OnGamePopupNewGameEvent += OnStartNewGame;
         }
@@ -68,17 +67,11 @@ namespace GameManagementSpace
             _allKilledEnemiesCount += 1;
             UpdateStats();
         }
-        
-        private void OnEnemyDamage()
-        {
-            _enemy.IsKilledSomeone = true;
-            Player.Instance.IsDead = true;
-
-            GameOver();
-        }
 
         private void GameOver()
         {
+            Player.Instance.IsDead = true;
+            
             _textCountFruits.text = "";
             _textCountKilled.text = "";
 
@@ -109,7 +102,7 @@ namespace GameManagementSpace
         private void OnPlayerCollision(Collision2D other)
         {
             other.gameObject.TryGetComponent(out ITag tagInstance);
-
+            
             switch (tagInstance)
             {
                 case IFruit:
@@ -134,7 +127,6 @@ namespace GameManagementSpace
         private void OnDisable()
         {
             Enemy.OnEnemyDieEvent -= OnEnemyDie;
-            Enemy.OnEnemyDamageEvent -= OnEnemyDamage;
             Player.OnPlayerCollisionEvent -= OnPlayerCollision;
             GamePopup.OnGamePopupNewGameEvent -= OnStartNewGame;
         }

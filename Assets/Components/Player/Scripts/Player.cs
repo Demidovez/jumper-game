@@ -18,6 +18,7 @@ namespace PlayerSpace
         [SerializeField] private GameObject _weaponPrefab;
         [SerializeField] private Vector3 _weaponPositionOffset = new Vector3(0.5f, -0.5f, 0);
         
+        private Animator _animator;
         private GameObject _weaponGameObject;
         private Weapon _weapon;
         
@@ -29,8 +30,8 @@ namespace PlayerSpace
         
         private Rigidbody2D _rigidBody;
 
-        internal bool IsMoving { get; private set; }
-        internal bool IsGrounded { get; private set; }
+        private bool _isMoving;
+        private bool _isGrounded;
         internal bool IsDead { get; set; }
         
         public delegate void OnPlayerCollision(Collision2D other);
@@ -44,6 +45,8 @@ namespace PlayerSpace
         private void Start()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
+            _animator = GetComponent<Animator>();
+            
             _groundCheckFilter.SetLayerMask(_groundLayerMask);
             
             SetWeapon();
@@ -51,10 +54,15 @@ namespace PlayerSpace
 
         private void Update()
         {
-            IsMoving = _rigidBody.velocity.x != 0;
+            _isMoving = _rigidBody.velocity.x != 0;
             
             SetLookDirection();
             CollisionCheck();
+            
+            _animator.SetBool("isMove",  _isMoving);
+            _animator.SetBool("isGrounded",  _isGrounded);
+            _animator.SetFloat("velocityY",  _rigidBody.velocity.y);
+            _animator.SetBool("isDead",  IsDead);
         }
 
         private void SetWeapon()
@@ -75,10 +83,10 @@ namespace PlayerSpace
 
         internal void Jump()
         {
-            if (!IsDead && (IsGrounded || _canDoubleJump))
+            if (!IsDead && (_isGrounded || _canDoubleJump))
             {
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
-                _canDoubleJump = IsGrounded;  
+                _canDoubleJump = _isGrounded;  
             }
         }
         
@@ -89,7 +97,7 @@ namespace PlayerSpace
 
         private void SetLookDirection()
         {
-            if (IsMoving && (_isLookToRight != _rigidBody.velocity.x > 0))
+            if (_isMoving && (_isLookToRight != _rigidBody.velocity.x > 0))
             {
                 _isLookToRight = !_isLookToRight;
                 transform.Rotate(0, 180, 0);
@@ -98,12 +106,7 @@ namespace PlayerSpace
 
         private void CollisionCheck()
         {
-            IsGrounded = _groundCheckCollider.OverlapCollider(_groundCheckFilter, new Collider2D[1]) > 0;
-        }
-
-        public float GetVelocityY()
-        {
-            return _rigidBody.velocity.y;
+            _isGrounded = _groundCheckCollider.OverlapCollider(_groundCheckFilter, new Collider2D[1]) > 0;
         }
 
         // public void Restore()
