@@ -135,13 +135,13 @@ GameObject:
   - component: {fileID: 17277576}
   - component: {fileID: 17277578}
   - component: {fileID: 17277579}
+  - component: {fileID: 17277582}
   - component: {fileID: 17277580}
   - component: {fileID: 17277581}
   - component: {fileID: 17277583}
-  - component: {fileID: 17277582}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,11 +290,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 10
   _jumpForce: 15
-  _groundCheckTransform: {fileID: 1231094398}
-  _groundCheckRadius: 0.2
+  _groundCheckCollider: {fileID: 1231094399}
   _groundLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4616
   _weaponPrefab: {fileID: 4932455295188273395, guid: 3e4d6927ac5b348e98499f1bc43edb8e, type: 3}
   _weaponPositionOffset: {x: 0.5, y: -0.5, z: 0}
 --- !u!114 &17277581
@@ -3655,11 +3654,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1484625980}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &424885748 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5092686019654957151, guid: 0d398662cea764f10965624f6bd98d6e, type: 3}
-  m_PrefabInstance: {fileID: 921165182658817882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &424885750 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3149714556327579232, guid: 0d398662cea764f10965624f6bd98d6e, type: 3}
@@ -3786,9 +3780,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 1484625983}
-  _fruitApple: {fileID: 424885748}
-  _fruitBanana: {fileID: 747530287}
-  _fruitMelon: {fileID: 1853674363}
   _textCountFruits: {fileID: 2054617399}
   _textCountKilled: {fileID: 96412974}
   _popupsContainer: {fileID: 1940160698}
@@ -3930,11 +3921,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &747530287 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2287992858744886228, guid: fe1c9a04ea0e34184b74e12b8168a1cd, type: 3}
-  m_PrefabInstance: {fileID: 8749910969263838733}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &747530289 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7820555181195948450, guid: fe1c9a04ea0e34184b74e12b8168a1cd, type: 3}
@@ -4193,6 +4179,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1231094398}
+  - component: {fileID: 1231094399}
   m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
@@ -4215,6 +4202,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 17277577}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1231094399
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231094397}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.02467823, y: -0.19185233}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.1881046, y: 0.16847563}
+  m_EdgeRadius: 0
 --- !u!1 &1381666241
 GameObject:
   m_ObjectHideFlags: 0
@@ -4628,9 +4660,10 @@ GameObject:
   - component: {fileID: 1506991923}
   - component: {fileID: 1506991925}
   - component: {fileID: 1506991926}
+  - component: {fileID: 1506991927}
   m_Layer: 0
   m_Name: Checkpoint
-  m_TagString: Checkpoint
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4774,6 +4807,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 6
+--- !u!114 &1506991927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506991922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0943843db1bf44ace8df2e5310b98d56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1556555587
 GameObject:
   m_ObjectHideFlags: 0
@@ -5083,11 +5128,6 @@ RectTransform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5654415405998564737, guid: 508f256323be14949a3fa57eea53407d, type: 3}
   m_PrefabInstance: {fileID: 2749061085743418279}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1853674363 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8007351096620718189, guid: 68c1730760b3e4d008dedf09e44db3e4, type: 3}
-  m_PrefabInstance: {fileID: 8246272653988726907}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1853674365 stripped
 Transform:

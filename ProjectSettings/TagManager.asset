@@ -3,12 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Alive
-  - Fruit
-  - Checkpoint
-  - Destructible
-  - Weapon
+  tags: []
   layers:
   - Default
   - TransparentFX
