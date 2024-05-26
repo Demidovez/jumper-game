@@ -7,6 +7,7 @@ namespace TagInterfacesSpace
     public interface IBox: ITag {}
     public interface IFruit: ITag {}
     public interface ICheckpoint: ITag {}
+    public interface ITrap: ITag {}
     public interface IDestructible : ITag
     {
         public void DestroyObject();

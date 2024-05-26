@@ -87,6 +87,15 @@ namespace GameManagementSpace
             _popupGameOver = Instantiate(_popupGameOverPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
         }
         
+        private void PickUpFruit(GameObject fruitObj)
+        {
+            fruitObj.SetActive(false);
+
+            _allFruitsCollectedCount += 1;
+
+            UpdateStats();
+        }
+        
         private void GameWin()
         {
             _textCountFruits.text = "";
@@ -100,17 +109,19 @@ namespace GameManagementSpace
         private void OnPlayerCollision(Collision2D other)
         {
             other.gameObject.TryGetComponent(out ITag tagInstance);
-            
-            if (tagInstance is IFruit)
-            {
-                other.gameObject.SetActive(false);
 
-                _allFruitsCollectedCount += 1;
-
-                UpdateStats();
-            } else if (tagInstance is ICheckpoint)
+            switch (tagInstance)
             {
-                GameWin();
+                case IFruit:
+                    PickUpFruit(other.gameObject);
+                    break;
+                case ITrap:
+                case IEnemy:
+                    GameOver();
+                    break;
+                case ICheckpoint:
+                    GameWin();
+                    break;
             }
         }
 
