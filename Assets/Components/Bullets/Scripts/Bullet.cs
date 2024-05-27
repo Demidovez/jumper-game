@@ -8,6 +8,9 @@ namespace BulletSpace
         [SerializeField] private float _moveForce = 75f;
         [SerializeField] private float _liveTime = 1f;
         
+        public delegate void OnBulletDestroy(ITag obj);
+        public static event OnBulletDestroy OnBulletDestroyEvent;
+        
         private Rigidbody2D _rigidBody;
         private bool _isMoved;
         private float _timerToInactive;
@@ -46,19 +49,18 @@ namespace BulletSpace
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            other.gameObject.TryGetComponent(out ITag tagInstance);
+            ITag tagInstance = other.gameObject.GetComponent<ITag>();
             
             switch (tagInstance)
             {
                 case IWeapon:
                 case IPlayer:
                     return;
-                case IDestructible destructible:
-                    destructible.DestroyObject();
-                    break;
+                default:
+                    SetInactive();
+                    OnBulletDestroyEvent?.Invoke(tagInstance);
+                    return;
             }
-
-            SetInactive();
         }
     }
 }

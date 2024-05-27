@@ -1,3 +1,4 @@
+using BulletSpace;
 using EnemySpace;
 using PlayerSpace;
 using TagInterfacesSpace;
@@ -36,6 +37,7 @@ namespace GameManagementSpace
         {
             Enemy.OnEnemyDieEvent += OnEnemyDie;
             Player.OnPlayerCollisionEvent += OnPlayerCollision;
+            Bullet.OnBulletDestroyEvent += OnBulletDestroy;
             GamePopup.OnGamePopupNewGameEvent += OnStartNewGame;
         }
 
@@ -51,6 +53,14 @@ namespace GameManagementSpace
             Destroy(_popupGameWin);
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        private void OnBulletDestroy(ITag obj)
+        {
+            if (obj is IDestructible destructible)
+            {
+                destructible.DestroyObject();
+            }
         }
 
         private void ResetStats()
@@ -101,7 +111,7 @@ namespace GameManagementSpace
 
         private void OnPlayerCollision(Collision2D other)
         {
-            other.gameObject.TryGetComponent(out ITag tagInstance);
+            ITag tagInstance = other.gameObject.GetComponent<ITag>();
             
             switch (tagInstance)
             {
@@ -128,6 +138,7 @@ namespace GameManagementSpace
         {
             Enemy.OnEnemyDieEvent -= OnEnemyDie;
             Player.OnPlayerCollisionEvent -= OnPlayerCollision;
+            Bullet.OnBulletDestroyEvent -= OnBulletDestroy;
             GamePopup.OnGamePopupNewGameEvent -= OnStartNewGame;
         }
     }

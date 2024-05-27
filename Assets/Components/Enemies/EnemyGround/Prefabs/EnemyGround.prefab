@@ -217,7 +217,7 @@ Animator:
   m_GameObject: {fileID: 4029474224372831447}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: d0126274df09e4ea9b7df6f1aee89bb0, type: 2}
+  m_Controller: {fileID: 9100000, guid: 13b7406ef07474b77aff691a14b19a9c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -244,12 +244,11 @@ MonoBehaviour:
   MoveValue: 100
   _deathCollider: {fileID: 3167821269402649538}
   _damageCollider: {fileID: 1706373744566503916}
-  _moveValue: -1
   _barrierCheckTransform: {fileID: 3641439985399837121}
   _barrierCheckRadius: 0.2
   _barrierLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 520
 --- !u!1 &7919474651219431508
 GameObject:
   m_ObjectHideFlags: 0

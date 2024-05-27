@@ -1,17 +1,17 @@
+using TagInterfacesSpace;
 using UnityEngine;
 
 namespace EnemySpace
 {
     public class EnemyGround : Enemy
     {
-        [SerializeField] protected float _moveValue = -1f;
-        
         [Header("Collision Info")] 
         [SerializeField] private Transform _barrierCheckTransform;
         [SerializeField] private float _barrierCheckRadius;
         [SerializeField] private LayerMask _barrierLayerMask;
         
         private Rigidbody2D _rigidBody;
+        private int _direction = -1;
         
         private void Start()
         {
@@ -20,8 +20,12 @@ namespace EnemySpace
         
         private void Update()
         {
-            Movement();
             ReachedBarrierCheck();
+        }
+        
+        private void FixedUpdate()
+        {
+            Movement();
         }
         
         private void ReachedBarrierCheck()
@@ -30,14 +34,14 @@ namespace EnemySpace
 
             if (isReachedBarrier)
             {
-                _moveValue *= -1;
+                _direction *= -1;
                 transform.Rotate(0, 180, 0);
             }
         }
         
         protected override void Movement()
         {
-            _rigidBody.velocity = new Vector2(_moveValue * MoveValue * Speed * Time.deltaTime, _rigidBody.velocity.y);
+            _rigidBody.velocity = new Vector2(_direction * MoveValue * Speed * Time.deltaTime, _rigidBody.velocity.y);
         }
     }
 }

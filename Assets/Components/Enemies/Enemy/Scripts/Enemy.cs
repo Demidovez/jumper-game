@@ -16,7 +16,7 @@ namespace EnemySpace
         
         private void OnCollisionEnter2D(Collision2D other)
         {
-            other.gameObject.TryGetComponent(out ITag tagInstance);
+            ITag tagInstance = other.gameObject.GetComponent<ITag>();
             
             if (tagInstance is IPlayer)
             {
