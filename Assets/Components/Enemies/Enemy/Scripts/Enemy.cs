@@ -12,7 +12,9 @@ namespace EnemySpace
         [SerializeField] private BoxCollider2D _damageCollider;
 
         public delegate void OnEnemyDie();
+        public delegate void OnEnemyDamage();
         public static event OnEnemyDie OnEnemyDieEvent;
+        public static event OnEnemyDamage OnEnemyDamageEvent;
         
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -22,19 +24,14 @@ namespace EnemySpace
             {
                 if (other.collider.IsTouching(_deathCollider))
                 {
-                    Die();
+                    gameObject.SetActive(false);
+                    OnEnemyDieEvent?.Invoke();
                 }
                 else if(other.collider.IsTouching(_damageCollider))
                 {
-                    // Damage();
+                    OnEnemyDamageEvent?.Invoke();
                 }
             }
-        }
-
-        private void Die()
-        {
-            gameObject.SetActive(false);
-            OnEnemyDieEvent?.Invoke();
         }
 
         protected abstract void Movement();

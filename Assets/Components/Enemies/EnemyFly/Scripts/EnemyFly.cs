@@ -4,23 +4,23 @@ namespace EnemySpace
 {
     public class EnemyFly : Enemy
     {
-        [SerializeField] private Transform _startMovePosition;
-        [SerializeField] private Transform _endMovePosition;
+        [SerializeField] private Transform _rightMovePosition;
+        [SerializeField] private Transform _leftMovePosition;
         
-        private Vector3 _startPosition;
-        private Vector3 _endPosition;
-        private bool _isMovingToEnd;
+        private Vector3 _rightPosition;
+        private Vector3 _leftPosition;
+        private bool _isMovingToLeft;
         
         private Rigidbody2D _rigidBody;
         
         private void Start()
         {
             _rigidBody = GetComponent<Rigidbody2D>();
-            _startPosition = _startMovePosition.position;
-            _endPosition = _endMovePosition.position;
+            _rightPosition = _rightMovePosition.position;
+            _leftPosition = _leftMovePosition.position;
             
-            transform.position = _startPosition;
-            _isMovingToEnd = true;
+            transform.position = _rightPosition;
+            _isMovingToLeft = true;
         }
         
         private void Update()
@@ -35,23 +35,23 @@ namespace EnemySpace
 
         private void TargetPositionCheck()
         {
-            if (transform.position.x >= _endPosition.x && _isMovingToEnd)
+            if (transform.position.x <= _leftPosition.x && _isMovingToLeft)
             {
-                _isMovingToEnd = false;
+                _isMovingToLeft = false;
                 transform.Rotate(0, 180, 0);
                 return;
             }
             
-            if (transform.position.x <= _startPosition.x && !_isMovingToEnd)
+            if (transform.position.x >= _rightPosition.x && !_isMovingToLeft)
             {
-                _isMovingToEnd = true;
+                _isMovingToLeft = true;
                 transform.Rotate(0, 180, 0);
             }
         }
         
         protected override void Movement()
         {
-            var direction = _isMovingToEnd ? 1 : -1;
+            var direction = _isMovingToLeft ? -1 : 1;
             
             _rigidBody.velocity = new Vector2( direction * MoveValue * Speed * Time.deltaTime, _rigidBody.velocity.y);
         }

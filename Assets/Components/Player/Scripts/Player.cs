@@ -108,11 +108,6 @@ namespace PlayerSpace
         {
             _isGrounded = _groundCheckCollider.OverlapCollider(_groundCheckFilter, new Collider2D[1]) > 0;
         }
-
-        // public void Restore()
-        // {
-        //     IsDead = false;
-        // }
         
         private void OnCollisionEnter2D(Collision2D other)
         {

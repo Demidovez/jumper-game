@@ -7,7 +7,6 @@ using UISpace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 namespace GameManagementSpace
 {
     public class GameManagement : MonoBehaviour
@@ -36,6 +35,7 @@ namespace GameManagementSpace
         private void OnEnable()
         {
             Enemy.OnEnemyDieEvent += OnEnemyDie;
+            Enemy.OnEnemyDamageEvent += OnEnemyDamage;
             Player.OnPlayerCollisionEvent += OnPlayerCollision;
             Bullet.OnBulletDestroyEvent += OnBulletDestroy;
             GamePopup.OnGamePopupNewGameEvent += OnStartNewGame;
@@ -109,6 +109,11 @@ namespace GameManagementSpace
             _popupGameOver = Instantiate(_popupGameWinPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
         }
 
+        private void OnEnemyDamage()
+        {
+            GameOver();
+        }
+
         private void OnPlayerCollision(Collision2D other)
         {
             ITag tagInstance = other.gameObject.GetComponent<ITag>();
@@ -119,7 +124,6 @@ namespace GameManagementSpace
                     PickUpFruit(other.gameObject);
                     break;
                 case ITrap:
-                case IEnemy:
                     GameOver();
                     break;
                 case ICheckpoint:
@@ -137,6 +141,7 @@ namespace GameManagementSpace
         private void OnDisable()
         {
             Enemy.OnEnemyDieEvent -= OnEnemyDie;
+            Enemy.OnEnemyDamageEvent -= OnEnemyDamage;
             Player.OnPlayerCollisionEvent -= OnPlayerCollision;
             Bullet.OnBulletDestroyEvent -= OnBulletDestroy;
             GamePopup.OnGamePopupNewGameEvent -= OnStartNewGame;
