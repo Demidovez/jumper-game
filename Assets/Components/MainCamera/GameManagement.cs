@@ -1,9 +1,9 @@
 using BulletSpace;
 using EnemySpace;
 using PlayerSpace;
+using PopupSpace;
 using TagInterfacesSpace;
 using TMPro;
-using UISpace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,20 +17,12 @@ namespace GameManagementSpace
         [Header("Stats")]
         [SerializeField] private TMP_Text _textCountFruits;
         [SerializeField] private TMP_Text _textCountKilled;
-
-        [Header("UI")] 
-        [SerializeField] private Canvas _popupsContainer;
-        [SerializeField] private GameObject _popupGameOverPrefab;
-        [SerializeField] private GameObject _popupGameWinPrefab;
         
         [Header("Other")]
         [SerializeField] private GameObject _checkPoint;
         
         private int _allFruitsCollectedCount = 0;
         private int _allKilledEnemiesCount = 0;
-
-        private GameObject _popupGameOver;
-        private GameObject _popupGameWin;
         
         private void OnEnable()
         {
@@ -38,7 +30,7 @@ namespace GameManagementSpace
             Enemy.OnEnemyDamageEvent += OnEnemyDamage;
             Player.OnPlayerCollisionEvent += OnPlayerCollision;
             Bullet.OnBulletDestroyEvent += OnBulletDestroy;
-            GamePopup.OnGamePopupNewGameEvent += OnStartNewGame;
+            PopupsManagement.OnPopupNewGameEvent += OnStartNewGame;
         }
 
         private void Start()
@@ -48,9 +40,7 @@ namespace GameManagementSpace
         
         private void OnStartNewGame()
         {
-            Time.timeScale = 1f;
-            Destroy(_popupGameOver);
-            Destroy(_popupGameWin);
+            PopupsManagement.Instance.HidePopups();
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
@@ -84,10 +74,8 @@ namespace GameManagementSpace
             
             _textCountFruits.text = "";
             _textCountKilled.text = "";
-
-            Time.timeScale = 0f;
             
-            _popupGameOver = Instantiate(_popupGameOverPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
+            PopupsManagement.Instance.ShowGameOverPopup();
         }
         
         private void PickUpFruit(GameObject fruitObj)
@@ -104,9 +92,7 @@ namespace GameManagementSpace
             _textCountFruits.text = "";
             _textCountKilled.text = "";
 
-            Time.timeScale = 0f;
-            
-            _popupGameOver = Instantiate(_popupGameWinPrefab, _popupsContainer.transform.position, Quaternion.identity, _popupsContainer.transform);
+            PopupsManagement.Instance.ShowGameWinPopup();
         }
 
         private void OnEnemyDamage()
@@ -144,7 +130,7 @@ namespace GameManagementSpace
             Enemy.OnEnemyDamageEvent -= OnEnemyDamage;
             Player.OnPlayerCollisionEvent -= OnPlayerCollision;
             Bullet.OnBulletDestroyEvent -= OnBulletDestroy;
-            GamePopup.OnGamePopupNewGameEvent -= OnStartNewGame;
+            PopupsManagement.OnPopupNewGameEvent -= OnStartNewGame;
         }
     }
 }
