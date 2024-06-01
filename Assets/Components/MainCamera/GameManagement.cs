@@ -100,14 +100,14 @@ namespace GameManagementSpace
             GameOver();
         }
 
-        private void OnPlayerCollision(Collision2D other)
+        private void OnPlayerCollision(GameObject otherObject)
         {
-            ITag tagInstance = other.gameObject.GetComponent<ITag>();
+            ITag tagInstance = otherObject.GetComponent<ITag>();
             
             switch (tagInstance)
             {
                 case IFruit:
-                    PickUpFruit(other.gameObject);
+                    PickUpFruit(otherObject);
                     break;
                 case ITrap:
                     GameOver();

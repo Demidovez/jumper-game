@@ -1,3 +1,4 @@
+using System;
 using TagInterfacesSpace;
 using UnityEngine;
 using WeaponSpace;
@@ -34,7 +35,7 @@ namespace PlayerSpace
         private bool _isGrounded;
         internal bool IsDead { get; set; }
         
-        public delegate void OnPlayerCollision(Collision2D other);
+        public delegate void OnPlayerCollision(GameObject other);
         public static event OnPlayerCollision OnPlayerCollisionEvent;
 
         private void Awake()
@@ -54,9 +55,8 @@ namespace PlayerSpace
 
         private void Update()
         {
-            _isMoving = _rigidBody.velocity.x != 0;
+            _isMoving = Mathf.Abs(_rigidBody.velocity.x) > Mathf.Epsilon;
             
-            SetLookDirection();
             CollisionCheck();
             
             _animator.SetBool("isMove",  _isMoving);
@@ -79,6 +79,15 @@ namespace PlayerSpace
             }
             
             _rigidBody.velocity = new Vector2(moveValue * _speed, _rigidBody.velocity.y);
+
+            bool shouldRotate = (moveValue > 0 && !_isLookToRight) || (moveValue < 0 && _isLookToRight);
+            
+            if (shouldRotate)
+            {
+                _isLookToRight = !_isLookToRight;
+                transform.Rotate(0, 180, 0);
+            }
+            
         }
 
         internal void Jump()
@@ -95,15 +104,6 @@ namespace PlayerSpace
             _weapon.IsFiring = canFire;
         }
 
-        private void SetLookDirection()
-        {
-            if (_isMoving && (_isLookToRight != _rigidBody.velocity.x > 0))
-            {
-                _isLookToRight = !_isLookToRight;
-                transform.Rotate(0, 180, 0);
-            }
-        }
-
         private void CollisionCheck()
         {
             _isGrounded = _groundCheckCollider.OverlapCollider(_groundCheckFilter, new Collider2D[1]) > 0;
@@ -111,7 +111,7 @@ namespace PlayerSpace
         
         private void OnCollisionEnter2D(Collision2D other)
         {
-            OnPlayerCollisionEvent?.Invoke(other);
+            OnPlayerCollisionEvent?.Invoke(other.gameObject);
         }
     }
 }

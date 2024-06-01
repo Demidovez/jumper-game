@@ -1,3 +1,5 @@
+using System;
+using PlayerSpace;
 using TagInterfacesSpace;
 using UnityEngine;
 
@@ -5,7 +7,7 @@ namespace BulletSpace
 {
     public abstract class Bullet : MonoBehaviour
     {
-        [SerializeField] private float _moveForce = 75f;
+        [SerializeField] private float _moveSpeed = 1f;
         [SerializeField] private float _liveTime = 1f;
         
         public delegate void OnBulletDestroy(ITag obj);
@@ -31,11 +33,15 @@ namespace BulletSpace
                     SetInactive();
                 }
             }
-            else
+        }
+
+        private void FixedUpdate()
+        {
+            if (!_isMoved)
             {
                 float direction = transform.rotation.y >= 0 ? 1 : -1;
                 
-                _rigidBody.velocity = new Vector2(direction * _moveForce, _rigidBody.velocity.y);
+                _rigidBody.velocity = new Vector2(direction * _moveSpeed, _rigidBody.velocity.y);
                 _isMoved = true;
             }
         }
@@ -55,8 +61,11 @@ namespace BulletSpace
             {
                 case IWeapon:
                 case IPlayer:
+                case ITrap:
+                case IFruit:
                     return;
                 default:
+                    Debug.Log(tagInstance);
                     SetInactive();
                     OnBulletDestroyEvent?.Invoke(tagInstance);
                     return;

@@ -7,6 +7,7 @@ namespace WeaponSpace
     public class WeaponFiring: MonoBehaviour
     {
         [SerializeField] private GameObject _bulletPrefab;
+        [SerializeField] private Transform _bulletStartPosition;
         [SerializeField] private int _initialPoolSize = 20;
         [SerializeField] private float _spawnInterval = 0.5f;
 
@@ -44,8 +45,8 @@ namespace WeaponSpace
 
             if (bullet)
             {
-                bullet.transform.position = transform.position;
-                bullet.transform.rotation = transform.rotation;
+                bullet.transform.position = _bulletStartPosition.position;
+                bullet.transform.rotation = _bulletStartPosition.rotation;
                 bullet.SetActive(true);
             }
         }
