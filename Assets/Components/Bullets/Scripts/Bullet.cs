@@ -53,7 +53,7 @@ namespace BulletSpace
             gameObject.SetActive(false);
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             ITag tagInstance = other.gameObject.GetComponent<ITag>();
             
@@ -65,7 +65,6 @@ namespace BulletSpace
                 case IFruit:
                     return;
                 default:
-                    Debug.Log(tagInstance);
                     SetInactive();
                     OnBulletDestroyEvent?.Invoke(tagInstance);
                     return;

@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 8809903944650939385, guid: 369443ca345894297807b9b159b938c3, type: 3}
+  _bulletsPrefab: {fileID: 29682840226985137, guid: e3c98d4ebfb7bce4e8a26900960e881d, type: 3}
   _bulletStartPosition: {fileID: 7824089001127573353}
   _initialPoolSize: 20
   _spawnInterval: 0.5

@@ -18,7 +18,7 @@ namespace PlayerSpace
 
         private void FixedUpdate()
         {
-            Player.Instance.Move(_moveInput);
+            Player.Instance?.Move(_moveInput);
         }
     }
 }

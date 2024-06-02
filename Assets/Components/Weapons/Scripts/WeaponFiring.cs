@@ -7,18 +7,22 @@ namespace WeaponSpace
     public class WeaponFiring: MonoBehaviour
     {
         [SerializeField] private GameObject _bulletPrefab;
+        [SerializeField] private GameObject _bulletsPrefab;
         [SerializeField] private Transform _bulletStartPosition;
         [SerializeField] private int _initialPoolSize = 20;
         [SerializeField] private float _spawnInterval = 0.5f;
 
         private List<GameObject> _bulletsPool;
+        private GameObject _bullets;
         private Weapon _weapon;
         private float _timer;
         
         private void Start()
         {
-            BulletsInit();
+            _bullets = Instantiate(_bulletsPrefab);
             _weapon = GetComponent<Weapon>();
+            
+            BulletsInit();
         }
 
         private void Update()
@@ -57,10 +61,7 @@ namespace WeaponSpace
 
             for (int i = 0; i < _initialPoolSize; i++)
             {
-                GameObject bullet = Instantiate(_bulletPrefab, transform);
-                bullet.SetActive(false);
-                
-                _bulletsPool.Add(bullet);
+                CreateBullet();
             }
         }
 
@@ -73,8 +74,13 @@ namespace WeaponSpace
                     return bullet;
                 }
             }
-            
-            GameObject newBullet = Instantiate(_bulletPrefab, transform);
+
+            return CreateBullet();
+        }
+
+        private GameObject CreateBullet()
+        {
+            GameObject newBullet = Instantiate(_bulletPrefab, _bullets.transform);
             newBullet.SetActive(false);
                 
             _bulletsPool.Add(newBullet);
