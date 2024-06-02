@@ -1,4 +1,5 @@
 using System;
+using GameManagementSpace;
 using TagInterfacesSpace;
 using UnityEngine;
 using WeaponSpace;
@@ -28,10 +29,10 @@ namespace PlayerSpace
         private bool _isLookToRight = true;
         private bool _canDoubleJump;
         private ContactFilter2D _groundCheckFilter;
+        private Bounds _levelBounds;
         
         private Rigidbody2D _rigidBody;
-
-        private bool _isMoving;
+        
         private bool _isGrounded;
         internal bool IsDead { get; set; }
         
@@ -49,20 +50,20 @@ namespace PlayerSpace
             _animator = GetComponent<Animator>();
             
             _groundCheckFilter.SetLayerMask(_groundLayerMask);
+            _levelBounds = Global.Instance.LevelBounds;
             
             SetWeapon();
         }
 
         private void Update()
         {
-            _isMoving = Mathf.Abs(_rigidBody.velocity.x) > Mathf.Epsilon;
-            
             CollisionCheck();
             
-            _animator.SetBool("isMove",  _isMoving);
             _animator.SetBool("isGrounded",  _isGrounded);
             _animator.SetFloat("velocityY",  _rigidBody.velocity.y);
             _animator.SetBool("isDead",  IsDead);
+
+            CheckBounds();
         }
 
         private void SetWeapon()
@@ -79,7 +80,9 @@ namespace PlayerSpace
             }
             
             _rigidBody.velocity = new Vector2(moveValue * _speed, _rigidBody.velocity.y);
-
+            
+            _animator.SetBool("isMove",  Mathf.Abs(moveValue) > 0.1f);
+            
             bool shouldRotate = (moveValue > 0 && !_isLookToRight) || (moveValue < 0 && _isLookToRight);
             
             if (shouldRotate)
@@ -87,7 +90,6 @@ namespace PlayerSpace
                 _isLookToRight = !_isLookToRight;
                 transform.Rotate(0, 180, 0);
             }
-            
         }
 
         internal void Jump()
@@ -97,6 +99,15 @@ namespace PlayerSpace
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
                 _canDoubleJump = _isGrounded;  
             }
+        }
+
+        private void CheckBounds()
+        {
+            transform.position = new Vector3(
+                Mathf.Clamp(transform.position.x, _levelBounds.min.x, _levelBounds.max.x),
+                Mathf.Clamp(transform.position.y, _levelBounds.min.y, _levelBounds.max.y),
+                transform.position.z
+            );
         }
         
         public void Damage(bool canFire)
