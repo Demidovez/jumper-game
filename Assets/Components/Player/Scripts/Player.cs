@@ -124,6 +124,11 @@ namespace PlayerSpace
         {
             OnPlayerCollisionEvent?.Invoke(other.gameObject);
         }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            OnPlayerCollisionEvent?.Invoke(other.gameObject);
+        }
     }
 }
 

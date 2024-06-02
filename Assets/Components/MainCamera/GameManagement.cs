@@ -11,9 +11,6 @@ namespace GameManagementSpace
 {
     public class GameManagement : MonoBehaviour
     {
-        [Header("Characters")]
-        [SerializeField] private Enemy _enemy;
-        
         [Header("Stats")]
         [SerializeField] private TMP_Text _textCountFruits;
         [SerializeField] private TMP_Text _textCountKilled;
@@ -115,7 +112,15 @@ namespace GameManagementSpace
                 case ICheckpoint:
                     GameWin();
                     break;
+                case ILevelPoint:
+                    NextLevel();
+                    break;
             }
+        }
+
+        private void NextLevel()
+        {
+            SceneManager.LoadScene("Level 2");
         }
 
         private void UpdateStats()
