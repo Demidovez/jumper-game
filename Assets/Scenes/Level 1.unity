@@ -207,7 +207,7 @@ Transform:
   m_GameObject: {fileID: 17277575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 52, y: -5.91, z: 0}
+  m_LocalPosition: {x: -17.31, y: -6.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4041,7 +4041,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260cb6644174450d8f041f3c69e31669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemy: {fileID: 0}
   _textCountFruits: {fileID: 2054617399}
   _textCountKilled: {fileID: 96412974}
   _checkPoint: {fileID: 0}
