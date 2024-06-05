@@ -6,6 +6,7 @@ using TagInterfacesSpace;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 namespace GameManagementSpace
 {
@@ -39,7 +40,8 @@ namespace GameManagementSpace
         {
             PopupsManagement.Instance.HidePopups();
 
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            DOTween.Clear(true);
+            SceneManager.LoadScene("Level 1");
         }
 
         private void OnBulletDestroy(ITag obj)
@@ -132,6 +134,7 @@ namespace GameManagementSpace
 
         private void NextLevel()
         {
+            DOTween.Clear(true);
             SceneManager.LoadScene("Level 2");
         }
 

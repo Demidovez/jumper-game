@@ -125,8 +125,7 @@ namespace PlayerSpace
         public void LoseLive()
         {
             _countLives--;
-
-            Debug.Log(_countLives);
+            
             _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
 
             var spriteRenderer = GetComponent<SpriteRenderer>();
