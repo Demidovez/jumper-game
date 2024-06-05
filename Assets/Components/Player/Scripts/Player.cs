@@ -1,13 +1,16 @@
-using System;
 using GameManagementSpace;
 using TagInterfacesSpace;
 using UnityEngine;
 using WeaponSpace;
+using DG.Tweening;
 
 namespace PlayerSpace
 {
     public class Player : MonoBehaviour, IPlayer
     {
+        [Header("Health")] 
+        [SerializeField] private int _allCountLives = 5;
+        
         [Header("Movement")]
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _jumpForce = 15f;
@@ -34,8 +37,10 @@ namespace PlayerSpace
         private Rigidbody2D _rigidBody;
         
         private bool _isGrounded;
+        private int _countLives;
         internal bool IsDead { get; set; }
-        
+        internal bool HasLive => _countLives > 0;
+
         public delegate void OnPlayerCollision(GameObject other);
         public static event OnPlayerCollision OnPlayerCollisionEvent;
 
@@ -51,6 +56,8 @@ namespace PlayerSpace
             
             _groundCheckFilter.SetLayerMask(_groundLayerMask);
             _levelBounds = Global.Instance.LevelBounds;
+
+            _countLives = _allCountLives;
             
             SetWeapon();
         }
@@ -113,6 +120,22 @@ namespace PlayerSpace
         public void Damage(bool canFire)
         {
             _weapon.IsFiring = canFire;
+        }
+
+        public void LoseLive()
+        {
+            _countLives--;
+
+            Debug.Log(_countLives);
+            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
+
+            var spriteRenderer = GetComponent<SpriteRenderer>();
+
+            DOTween.Sequence()
+                .Append(spriteRenderer.DOColor(Color.red, 0.1f))
+                .Append(spriteRenderer.DOColor(Color.white, 0.1f))
+                .Append(spriteRenderer.DOColor(Color.red, 0.1f))
+                .Append(spriteRenderer.DOColor(Color.white, 0.1f));
         }
 
         private void CollisionCheck()

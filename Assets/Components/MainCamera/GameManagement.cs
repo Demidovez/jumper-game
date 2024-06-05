@@ -48,6 +48,12 @@ namespace GameManagementSpace
             {
                 destructible.DestroyObject();
             }
+
+            if (obj is IEnemy)
+            {
+                _allKilledEnemiesCount += 1;
+                UpdateStats();
+            }
         }
 
         private void ResetStats()
@@ -65,8 +71,14 @@ namespace GameManagementSpace
             UpdateStats();
         }
 
-        private void GameOver()
+        private void LoseLiveOrGameOver()
         {
+            if (Player.Instance.HasLive)
+            {
+                Player.Instance.LoseLive();
+                return;
+            } 
+            
             Player.Instance.IsDead = true;
             
             _textCountFruits.text = "";
@@ -94,7 +106,7 @@ namespace GameManagementSpace
 
         private void OnEnemyDamage()
         {
-            GameOver();
+            LoseLiveOrGameOver();
         }
 
         private void OnPlayerCollision(GameObject otherObject)
@@ -107,7 +119,7 @@ namespace GameManagementSpace
                     PickUpFruit(otherObject);
                     break;
                 case ITrap:
-                    GameOver();
+                    LoseLiveOrGameOver();
                     break;
                 case ICheckpoint:
                     GameWin();
