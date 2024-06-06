@@ -1,9 +1,8 @@
-using TagInterfacesSpace;
 using UnityEngine;
 
 namespace WeaponSpace
 {
-    public abstract class Weapon: MonoBehaviour, IWeapon
+    public abstract class Weapon: MonoBehaviour
     {
         internal bool IsFiring { get; set; }
 

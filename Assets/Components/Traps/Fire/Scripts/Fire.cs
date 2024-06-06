@@ -1,18 +1,15 @@
-using TagInterfacesSpace;
 using UnityEngine;
 
 namespace TrapSpace
 {
-    public class Fire : MonoBehaviour, ITrap
+    public class Fire : MonoBehaviour
     {
-        private void OnCollisionEnter2D(Collision2D other)
+        public delegate void OnFireCollision(GameObject other);
+        public static event OnFireCollision OnFireCollisionEvent;
+        
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            ITag tagInstance = other.gameObject.GetComponent<ITag>();
-
-            if (tagInstance is IDestructible destructible)
-            {
-                destructible.DestroyObject();
-            }
+            OnFireCollisionEvent?.Invoke(other.gameObject);
         }
     }
 }

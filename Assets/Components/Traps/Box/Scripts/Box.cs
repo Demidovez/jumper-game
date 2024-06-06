@@ -1,8 +1,6 @@
-using System;
-using TagInterfacesSpace;
 using UnityEngine;
 
-public class Box : MonoBehaviour, IDestructible, IBox
+public class Box : MonoBehaviour
 {
     private Animator _animator;
 

@@ -2,11 +2,12 @@ using BulletSpace;
 using EnemySpace;
 using PlayerSpace;
 using PopupSpace;
-using TagInterfacesSpace;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using TrapSpace;
+using WeaponSpace;
 
 namespace GameManagementSpace
 {
@@ -19,43 +20,125 @@ namespace GameManagementSpace
         [Header("Other")]
         [SerializeField] private GameObject _checkPoint;
         
-        private int _allFruitsCollectedCount = 0;
-        private int _allKilledEnemiesCount = 0;
+        private int _allFruitsCollectedCount;
+        private int _allKilledEnemiesCount;
         
         private void OnEnable()
         {
+            Enemy.OnEnemyDieAreaCollisionEvent += OnEnemyDieAreaCollision;
+            Enemy.OnEnemyDamageAreaCollisionEvent += OnEnemyDamageAreaCollision;
             Enemy.OnEnemyDieEvent += OnEnemyDie;
-            Enemy.OnEnemyDamageEvent += OnEnemyDamage;
-            Player.OnPlayerCollisionEvent += OnPlayerCollision;
-            Bullet.OnBulletDestroyEvent += OnBulletDestroy;
+            Fruit.OnFruitCollisionEvent += OnFruitCollision;
+            Fire.OnFireCollisionEvent += OnFireCollision;
+            LevelPoint.OnLevelPointCollisionEvent += OnLevelPointCollision;
+            Player.OnPlayerDieEvent += OnPlayerDie;
+            Bullet.OnBulletCollisionEvent += OnBulletCollision;
             PopupsManagement.OnPopupNewGameEvent += OnStartNewGame;
+            Checkpoint.OnCheckpointCollisionEvent += OnCheckpointCollision;
         }
-
+        
         private void Start()
         {
             ResetStats();
         }
+
+        private static void OnEnemyDieAreaCollision(Enemy enemy, GameObject other)
+        {
+            if (other == Player.Instance.gameObject)
+            {
+                enemy.TakeDamage();
+            }
+        }
         
-        private void OnStartNewGame()
+        private static void OnEnemyDamageAreaCollision(GameObject other)
+        {
+            if (other == Player.Instance.gameObject)
+            {
+                Player.Instance.TakeDamage();
+            }
+        }
+        
+        private void OnEnemyDie()
+        {
+            _allKilledEnemiesCount += 1;
+            UpdateStats();
+        }
+        
+        private void OnFruitCollision(GameObject obj, GameObject other)
+        {
+            if (other == Player.Instance.gameObject)
+            {
+                obj.SetActive(false);
+
+                _allFruitsCollectedCount += 1;
+
+                UpdateStats();
+            }
+        }
+        
+        private static void OnFireCollision(GameObject other)
+        {
+            if (other == Player.Instance.gameObject)
+            {
+                Player.Instance.TakeDamage();
+                return;
+            }
+
+            if (other.TryGetComponent(out Box box))
+            {
+                box.DestroyObject();
+            }
+        }
+        
+        private static void OnLevelPointCollision(GameObject other)
+        {
+            DOTween.Clear(true);
+            SceneManager.LoadScene("Level 2");
+        }
+        
+        private static void OnBulletCollision(Bullet bullet, GameObject other)
+        {
+            if (other.TryGetComponent(out Enemy enemy))
+            {
+                bullet.SetInactive();
+                enemy.TakeDamage();
+                
+                return;
+            }
+            
+            if (other.TryGetComponent(out Box box))
+            {
+                bullet.SetInactive();
+                box.DestroyObject();
+                
+                return;
+            }
+
+            if (other.GetComponent<Fruit>())
+            {
+                return;
+            }
+            
+            bullet.SetInactive();
+        }
+
+        private void OnCheckpointCollision(GameObject other)
+        {
+            if (other == Player.Instance.gameObject)
+            {
+                _textCountFruits.text = "";
+                _textCountKilled.text = "";
+
+                PopupsManagement.Instance.ShowGameWinPopup();
+            }
+        }
+        
+        private static void OnStartNewGame()
         {
             PopupsManagement.Instance.HidePopups();
 
             DOTween.Clear(true);
             SceneManager.LoadScene("Level 1");
-        }
-
-        private void OnBulletDestroy(ITag obj)
-        {
-            if (obj is IDestructible destructible)
-            {
-                destructible.DestroyObject();
-            }
-
-            if (obj is IEnemy)
-            {
-                _allKilledEnemiesCount += 1;
-                UpdateStats();
-            }
         }
 
         private void ResetStats()
@@ -66,76 +149,13 @@ namespace GameManagementSpace
             _allFruitsCollectedCount = 0;
             _allKilledEnemiesCount = 0;
         }
-        
-        private void OnEnemyDie()
-        {
-            _allKilledEnemiesCount += 1;
-            UpdateStats();
-        }
 
-        private void LoseLiveOrGameOver()
+        private void OnPlayerDie()
         {
-            if (Player.Instance.HasLive)
-            {
-                Player.Instance.LoseLive();
-                return;
-            } 
-            
-            Player.Instance.IsDead = true;
-            
             _textCountFruits.text = "";
             _textCountKilled.text = "";
             
             PopupsManagement.Instance.ShowGameOverPopup();
-        }
-        
-        private void PickUpFruit(GameObject fruitObj)
-        {
-            fruitObj.SetActive(false);
-
-            _allFruitsCollectedCount += 1;
-
-            UpdateStats();
-        }
-        
-        private void GameWin()
-        {
-            _textCountFruits.text = "";
-            _textCountKilled.text = "";
-
-            PopupsManagement.Instance.ShowGameWinPopup();
-        }
-
-        private void OnEnemyDamage()
-        {
-            LoseLiveOrGameOver();
-        }
-
-        private void OnPlayerCollision(GameObject otherObject)
-        {
-            ITag tagInstance = otherObject.GetComponent<ITag>();
-            
-            switch (tagInstance)
-            {
-                case IFruit:
-                    PickUpFruit(otherObject);
-                    break;
-                case ITrap:
-                    LoseLiveOrGameOver();
-                    break;
-                case ICheckpoint:
-                    GameWin();
-                    break;
-                case ILevelPoint:
-                    NextLevel();
-                    break;
-            }
-        }
-
-        private void NextLevel()
-        {
-            DOTween.Clear(true);
-            SceneManager.LoadScene("Level 2");
         }
 
         private void UpdateStats()
@@ -146,11 +166,16 @@ namespace GameManagementSpace
         
         private void OnDisable()
         {
+            Enemy.OnEnemyDieAreaCollisionEvent -= OnEnemyDieAreaCollision;
+            Enemy.OnEnemyDamageAreaCollisionEvent -= OnEnemyDamageAreaCollision;
             Enemy.OnEnemyDieEvent -= OnEnemyDie;
-            Enemy.OnEnemyDamageEvent -= OnEnemyDamage;
-            Player.OnPlayerCollisionEvent -= OnPlayerCollision;
-            Bullet.OnBulletDestroyEvent -= OnBulletDestroy;
+            Fruit.OnFruitCollisionEvent -= OnFruitCollision;
+            Fire.OnFireCollisionEvent -= OnFireCollision;
+            LevelPoint.OnLevelPointCollisionEvent -= OnLevelPointCollision;
+            Player.OnPlayerDieEvent -= OnPlayerDie;
+            Bullet.OnBulletCollisionEvent -= OnBulletCollision;
             PopupsManagement.OnPopupNewGameEvent -= OnStartNewGame;
+            Checkpoint.OnCheckpointCollisionEvent -= OnCheckpointCollision;
         }
     }
 }

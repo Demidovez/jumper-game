@@ -1,6 +1,3 @@
-using System;
-using PlayerSpace;
-using TagInterfacesSpace;
 using UnityEngine;
 
 namespace BulletSpace
@@ -10,8 +7,8 @@ namespace BulletSpace
         [SerializeField] private float _moveSpeed = 1f;
         [SerializeField] private float _liveTime = 1f;
         
-        public delegate void OnBulletDestroy(ITag obj);
-        public static event OnBulletDestroy OnBulletDestroyEvent;
+        public delegate void OnBulletCollision(Bullet bullet, GameObject other);
+        public static event OnBulletCollision OnBulletCollisionEvent;
         
         private Rigidbody2D _rigidBody;
         private bool _isMoved;
@@ -46,7 +43,7 @@ namespace BulletSpace
             }
         }
 
-        private void SetInactive()
+        public void SetInactive()
         {
             _timerToInactive = 0f;
             _isMoved = false;
@@ -55,20 +52,7 @@ namespace BulletSpace
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            ITag tagInstance = other.gameObject.GetComponent<ITag>();
-            
-            switch (tagInstance)
-            {
-                case IWeapon:
-                case IPlayer:
-                case ITrap:
-                case IFruit:
-                    return;
-                default:
-                    SetInactive();
-                    OnBulletDestroyEvent?.Invoke(tagInstance);
-                    return;
-            }
+            OnBulletCollisionEvent?.Invoke(this, other.gameObject);
         }
     }
 }

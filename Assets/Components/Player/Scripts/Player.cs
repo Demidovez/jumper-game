@@ -1,12 +1,11 @@
 using GameManagementSpace;
-using TagInterfacesSpace;
 using UnityEngine;
 using WeaponSpace;
 using DG.Tweening;
 
 namespace PlayerSpace
 {
-    public class Player : MonoBehaviour, IPlayer
+    public class Player : MonoBehaviour
     {
         [Header("Health")] 
         [SerializeField] private int _allCountLives = 5;
@@ -38,11 +37,13 @@ namespace PlayerSpace
         
         private bool _isGrounded;
         private int _countLives;
-        internal bool IsDead { get; set; }
-        internal bool HasLive => _countLives > 0;
+        private bool _isDead;
 
         public delegate void OnPlayerCollision(GameObject other);
         public static event OnPlayerCollision OnPlayerCollisionEvent;
+        
+        public delegate void OnPlayerDie();
+        public static event OnPlayerDie OnPlayerDieEvent;
 
         private void Awake()
         {
@@ -68,7 +69,7 @@ namespace PlayerSpace
             
             _animator.SetBool("isGrounded",  _isGrounded);
             _animator.SetFloat("velocityY",  _rigidBody.velocity.y);
-            _animator.SetBool("isDead",  IsDead);
+            _animator.SetBool("isDead",  _isDead);
 
             CheckBounds();
         }
@@ -81,7 +82,7 @@ namespace PlayerSpace
 
         internal void Move(float moveValue)
         {
-            if (IsDead)
+            if (_isDead)
             {
                 return;
             }
@@ -101,7 +102,7 @@ namespace PlayerSpace
 
         internal void Jump()
         {
-            if (!IsDead && (_isGrounded || _canDoubleJump))
+            if (!_isDead && (_isGrounded || _canDoubleJump))
             {
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
                 _canDoubleJump = _isGrounded;  
@@ -122,7 +123,7 @@ namespace PlayerSpace
             _weapon.IsFiring = canFire;
         }
 
-        public void LoseLive()
+        private void LoseLive()
         {
             _countLives--;
             
@@ -135,6 +136,18 @@ namespace PlayerSpace
                 .Append(spriteRenderer.DOColor(Color.white, 0.1f))
                 .Append(spriteRenderer.DOColor(Color.red, 0.1f))
                 .Append(spriteRenderer.DOColor(Color.white, 0.1f));
+        }
+
+        public void TakeDamage()
+        {
+            if (_countLives > 0)
+            {
+                LoseLive();
+                return;
+            } 
+            
+            _isDead = true;
+            OnPlayerDieEvent?.Invoke();
         }
 
         private void CollisionCheck()
