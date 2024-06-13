@@ -36,14 +36,17 @@ namespace PlayerSpace
         private Rigidbody2D _rigidBody;
         
         private bool _isGrounded;
-        private int _countLives;
         private bool _isDead;
+        public int CountLives { get; private set; }
 
-        public delegate void OnPlayerCollision(GameObject other);
-        public static event OnPlayerCollision OnPlayerCollisionEvent;
-        
         public delegate void OnPlayerDie();
         public static event OnPlayerDie OnPlayerDieEvent;
+        
+        public delegate void OnPlayerInitLives();
+        public static event OnPlayerInitLives OnPlayerInitLivesEvent;
+        
+        public delegate void OnPlayerLostLife();
+        public static event OnPlayerLostLife OnPlayerLostLifeEvent;
 
         private void Awake()
         {
@@ -57,8 +60,6 @@ namespace PlayerSpace
             
             _groundCheckFilter.SetLayerMask(_groundLayerMask);
             _levelBounds = Global.Instance.LevelBounds;
-
-            _countLives = _allCountLives;
             
             SetWeapon();
         }
@@ -72,6 +73,14 @@ namespace PlayerSpace
             _animator.SetBool("isDead",  _isDead);
 
             CheckBounds();
+        }
+        
+        public void SetCountLives(int lives)
+        {
+            int allLives = lives > 0 ? lives : _allCountLives;
+            
+            CountLives = allLives;
+            OnPlayerInitLivesEvent?.Invoke();
         }
 
         private void SetWeapon()
@@ -123,9 +132,10 @@ namespace PlayerSpace
             _weapon.IsFiring = canFire;
         }
 
-        private void LoseLive()
+        private void LoseLife()
         {
-            _countLives--;
+            CountLives--;
+            OnPlayerLostLifeEvent?.Invoke();
             
             _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
 
@@ -140,9 +150,9 @@ namespace PlayerSpace
 
         public void TakeDamage()
         {
-            if (_countLives > 0)
+            if (CountLives > 1)
             {
-                LoseLive();
+                LoseLife();
                 return;
             } 
             
@@ -153,16 +163,6 @@ namespace PlayerSpace
         private void CollisionCheck()
         {
             _isGrounded = _groundCheckCollider.OverlapCollider(_groundCheckFilter, new Collider2D[1]) > 0;
-        }
-        
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            OnPlayerCollisionEvent?.Invoke(other.gameObject);
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            OnPlayerCollisionEvent?.Invoke(other.gameObject);
         }
     }
 }

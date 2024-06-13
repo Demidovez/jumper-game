@@ -1,3 +1,4 @@
+using System;
 using BulletSpace;
 using EnemySpace;
 using PlayerSpace;
@@ -22,7 +23,7 @@ namespace GameManagementSpace
         
         private int _allFruitsCollectedCount;
         private int _allKilledEnemiesCount;
-        
+
         private void OnEnable()
         {
             Enemy.OnEnemyDieAreaCollisionEvent += OnEnemyDieAreaCollision;
@@ -35,11 +36,17 @@ namespace GameManagementSpace
             Bullet.OnBulletCollisionEvent += OnBulletCollision;
             PopupsManagement.OnPopupNewGameEvent += OnStartNewGame;
             Checkpoint.OnCheckpointCollisionEvent += OnCheckpointCollision;
+            SceneData.OnSceneDataRestoredEvent += OnSceneDataRestored;
         }
-        
-        private void Start()
+
+        private void OnSceneDataRestored(int fruits, int enemies, int lives)
         {
-            ResetStats();
+            _allFruitsCollectedCount = fruits;
+            _allKilledEnemiesCount = enemies;
+            
+            Player.Instance.SetCountLives(lives);
+
+            UpdateStats();
         }
 
         private static void OnEnemyDieAreaCollision(Enemy enemy, GameObject other)
@@ -90,9 +97,11 @@ namespace GameManagementSpace
             }
         }
         
-        private static void OnLevelPointCollision(GameObject other)
+        private void OnLevelPointCollision(GameObject other)
         {
             DOTween.Clear(true);
+            SceneData.Instance.Save(_allFruitsCollectedCount, _allKilledEnemiesCount, Player.Instance.CountLives);
+            
             SceneManager.LoadScene("Level 2");
         }
         
@@ -141,15 +150,6 @@ namespace GameManagementSpace
             SceneManager.LoadScene("Level 1");
         }
 
-        private void ResetStats()
-        {
-            _textCountFruits.text = "Собрано фруктов: 0";
-            _textCountKilled.text = "Убито врагов: 0";
-
-            _allFruitsCollectedCount = 0;
-            _allKilledEnemiesCount = 0;
-        }
-
         private void OnPlayerDie()
         {
             _textCountFruits.text = "";
@@ -176,6 +176,7 @@ namespace GameManagementSpace
             Bullet.OnBulletCollisionEvent -= OnBulletCollision;
             PopupsManagement.OnPopupNewGameEvent -= OnStartNewGame;
             Checkpoint.OnCheckpointCollisionEvent -= OnCheckpointCollision;
+            SceneData.OnSceneDataRestoredEvent -= OnSceneDataRestored;
         }
     }
 }
